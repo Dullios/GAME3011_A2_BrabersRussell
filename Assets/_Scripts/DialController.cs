@@ -13,10 +13,8 @@ public class DialController : MonoBehaviour
     [SerializeField]
     private bool isRotating;
 
-    [SerializeField]
-    private int correctOrientation;
-    [SerializeField]
-    private int currentOrientation = 0;
+    public int correctOrientation { get; private set; }
+    public int currentOrientation { get; private set; } = 0;
 
     [Header("Input Properties")]
     [SerializeField]
@@ -85,7 +83,8 @@ public class DialController : MonoBehaviour
 
         if (hit.transform != null && hit.transform.name == gameObject.name)
         {
-            isSelected = true;
+            if(!GameManager.instance.gameOver)
+                isSelected = true;
         }
     }
 

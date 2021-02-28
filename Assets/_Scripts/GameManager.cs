@@ -26,6 +26,8 @@ public enum Skill
 
 public class GameManager : MonoBehaviour
 {
+    public bool gameOver { get; private set; }
+
     [Header("Settings")]
     public Difficulty difficulty;
 
@@ -40,10 +42,17 @@ public class GameManager : MonoBehaviour
     public GameObject safeDoor;
     public GameObject[] rings;
 
+    [Header("Timer")]
+    [SerializeField]
+    private float timer;
+    [SerializeField]
+    private TextMeshProUGUI timerUI;
+
     [Header("UI Objects")]
     public TMP_Dropdown dropDown;
     public Slider slider;
     public Button button;
+    public GameObject gameOverPanel;
 
     [Header("Sounds")]
     [SerializeField]
@@ -82,6 +91,31 @@ public class GameManager : MonoBehaviour
         {
             rings[i].SetActive(true);
         }
+
+        timer = 20 * (int)difficulty;
+        StartCoroutine(TimerRoutine());
+    }
+
+    IEnumerator TimerRoutine()
+    {
+        while(timer >= 0)
+        {
+            timer -= Time.deltaTime;
+            timerUI.text = timer.ToString("00.00");
+            yield return null;
+        }
+
+        GameOver(false);
+    }
+
+    public void GameOver(bool win)
+    {
+        gameOver = true;
+
+        StopAllCoroutines();
+
+        gameOverPanel.SetActive(true);
+        gameOverPanel.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = win ? "You Win!" : "You Lost!";
     }
 
     public void SkillSlider(Slider slider)
@@ -105,6 +139,11 @@ public class GameManager : MonoBehaviour
                 skillText.text = "Master";
                 break;
         }
+    }
+
+    public void ResetGame()
+    {
+        // TODO: 
     }
 
     private void ToggleUI(bool enable)
