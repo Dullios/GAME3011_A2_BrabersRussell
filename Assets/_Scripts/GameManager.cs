@@ -114,8 +114,31 @@ public class GameManager : MonoBehaviour
 
         StopAllCoroutines();
 
+        if (win)
+            StartCoroutine(SafeDoorRoutine());
+        else
+        {
+            gameOverPanel.SetActive(true);
+            gameOverPanel.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "You Lost!";
+        }
+    }
+
+    IEnumerator SafeDoorRoutine()
+    {
+        float startRotation = safeDoor.transform.eulerAngles.y;
+        float endRotation = startRotation + 90.0f;
+        float t = 0.0f;
+
+        while (t < 5.0f)
+        {
+            t += Time.deltaTime;
+            float rotation = Mathf.Lerp(startRotation, endRotation, t / 5.0f);
+            safeDoor.transform.eulerAngles = new Vector3(0, rotation, 0);
+            yield return null;
+        }
+
         gameOverPanel.SetActive(true);
-        gameOverPanel.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = win ? "You Win!" : "You Lost!";
+        gameOverPanel.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "You Win!";
     }
 
     public void SkillSlider(Slider slider)
