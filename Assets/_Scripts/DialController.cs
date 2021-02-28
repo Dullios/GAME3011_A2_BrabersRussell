@@ -5,30 +5,67 @@ using UnityEngine.InputSystem;
 
 public class DialController : MonoBehaviour
 {
+    [Header("Rotation Properties")]
     [SerializeField]
     private float notchAngle;
     [SerializeField]
+    private float duration;
+    [SerializeField]
+    private bool isRotating;
+
+    [SerializeField]
+    private int correctOrientation;
+    [SerializeField]
+    private int currentOrientation = 0;
+
+    [Header("Input Properties")]
+    [SerializeField]
     private bool isSelected;
     private Vector2 mousePosition;
+    [SerializeField]
     private Vector2 inputVector;
+
+    private void Start()
+    {
+        correctOrientation = Random.Range(0, 10);
+    }
 
     public void OnMovement(InputValue value)
     {
         inputVector = value.Get<Vector2>();
-        
-        if (isSelected)
-        {
-            Vector3 angle = gameObject.transform.rotation.eulerAngles;
 
+        if (isSelected && !isRotating)
+        {
             if (inputVector.x < 0)
-            {
-                gameObject.transform.Rotate(0, -notchAngle * inputVector.x, 0, Space.Self);
-            }
-            else
-            {
-                gameObject.transform.Rotate(0, notchAngle * inputVector.x, 0, Space.Self);
-            }
+                StartCoroutine(RotateRoutine(true));
+            else if (inputVector.x > 0)
+                StartCoroutine(RotateRoutine(false));
         }
+    }
+
+    IEnumerator RotateRoutine(bool isLeft)
+    {
+        isRotating = true;
+        float startRotation = transform.eulerAngles.x;
+        float endRotation = isLeft ? startRotation + notchAngle : startRotation - notchAngle;
+        float t = 0.0f;
+        
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            float rotation = Mathf.Lerp(startRotation, endRotation, t / duration) % notchAngle;
+            transform.eulerAngles = new Vector3(rotation, -90, -90);
+            yield return null;
+        }
+
+        currentOrientation += isLeft ? 1 : -1;
+
+        if (currentOrientation > 9)
+            currentOrientation = 0;
+        else if (currentOrientation < 0)
+            currentOrientation = 9;
+
+        isRotating = false;
     }
 
     public void OnMousePosition(InputValue value)

@@ -14,6 +14,15 @@ public enum Difficulty
     HARD = 4
 }
 
+[System.Serializable]
+public enum Skill
+{
+    BASIC,
+    ADEPT,
+    SKILLED,
+    MASTER
+}
+
 public class GameManager : MonoBehaviour
 {
     [Header("Settings")]
@@ -23,6 +32,12 @@ public class GameManager : MonoBehaviour
     public GameObject safe;
     public GameObject safeDoor;
     public GameObject[] rings;
+
+    [Header("Player Skill")]
+    [SerializeField]
+    private Skill playerSkill;
+    [SerializeField]
+    private TextMeshProUGUI skillText;
 
     public void SetDifficulty(TMP_Dropdown drop)
     {
@@ -39,6 +54,29 @@ public class GameManager : MonoBehaviour
         for(int i = 0; i < (int)difficulty; i++)
         {
             rings[i].SetActive(true);
+        }
+    }
+
+    public void SkillSlider(Slider slider)
+    {
+        switch(slider.value)
+        {
+            case 1:
+                playerSkill = Skill.BASIC;
+                skillText.text = "Basic";
+                break;
+            case 2:
+                playerSkill = Skill.ADEPT;
+                skillText.text = "Adept";
+                break;
+            case 3:
+                playerSkill = Skill.SKILLED;
+                skillText.text = "Skilled";
+                break;
+            case 4:
+                playerSkill = Skill.MASTER;
+                skillText.text = "Master";
+                break;
         }
     }
 }

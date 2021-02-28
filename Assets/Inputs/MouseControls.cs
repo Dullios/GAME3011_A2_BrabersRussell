@@ -32,7 +32,7 @@ public class @MouseControls : IInputActionCollection, IDisposable
                     ""id"": ""849ee150-7836-4d51-ba81-0a36ea3f17c2"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": ""Hold(duration=0.1)""
+                    ""interactions"": ""Hold(duration=0.01)""
                 },
                 {
                     ""name"": ""ClickRelease"",
