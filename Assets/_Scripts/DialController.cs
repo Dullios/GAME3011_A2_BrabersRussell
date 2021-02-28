@@ -65,6 +65,8 @@ public class DialController : MonoBehaviour
         else if (currentOrientation < 0)
             currentOrientation = 9;
 
+        GameManager.instance.PlayClick(currentOrientation == correctOrientation);
+
         isRotating = false;
     }
 

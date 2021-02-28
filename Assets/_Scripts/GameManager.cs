@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Audio;
 
 [System.Serializable]
 public enum Difficulty
@@ -28,16 +29,39 @@ public class GameManager : MonoBehaviour
     [Header("Settings")]
     public Difficulty difficulty;
 
-    [Header("Safe Objects")]
-    public GameObject safe;
-    public GameObject safeDoor;
-    public GameObject[] rings;
-
     [Header("Player Skill")]
     [SerializeField]
     private Skill playerSkill;
     [SerializeField]
     private TextMeshProUGUI skillText;
+
+    [Header("Safe Objects")]
+    public GameObject safe;
+    public GameObject safeDoor;
+    public GameObject[] rings;
+
+    [Header("UI Objects")]
+    public TMP_Dropdown dropDown;
+    public Slider slider;
+    public Button button;
+
+    [Header("Sounds")]
+    [SerializeField]
+    private AudioSource click;
+    [SerializeField]
+    private AudioSource modClick;
+    [SerializeField]
+    private AudioMixer clickMixer;
+
+    public static GameManager instance;
+
+    private void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(gameObject);
+    }
 
     public void SetDifficulty(TMP_Dropdown drop)
     {
@@ -46,6 +70,9 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
+        ToggleUI(false);
+        SetMixerValues();
+
         if (difficulty == Difficulty.DEFAULT)
             difficulty = Difficulty.EASY;
 
@@ -78,5 +105,32 @@ public class GameManager : MonoBehaviour
                 skillText.text = "Master";
                 break;
         }
+    }
+
+    private void ToggleUI(bool enable)
+    {
+        dropDown.interactable = enable;
+        slider.interactable = enable;
+        button.interactable = enable;
+    }
+
+    public void PlayClick(bool isCorrect)
+    {
+        if(isCorrect)
+        {
+            modClick.Play();
+        }
+        else
+        {
+            click.Play();
+        }
+    }
+
+    private void SetMixerValues()
+    {
+        float dry = (85.0f - (10.0f * (int)playerSkill)) / 100.0f;
+        clickMixer.SetFloat("drymix", dry);
+        float wet = (15.0f + (10.0f * (int)playerSkill)) / 100.0f;
+        clickMixer.SetFloat("wetmix", wet);
     }
 }
