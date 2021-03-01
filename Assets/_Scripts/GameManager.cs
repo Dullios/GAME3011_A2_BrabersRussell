@@ -32,10 +32,8 @@ public class GameManager : MonoBehaviour
     public Difficulty difficulty;
 
     [Header("Player Skill")]
-    [SerializeField]
-    private Skill playerSkill;
-    [SerializeField]
-    private TextMeshProUGUI skillText;
+    [SerializeField] private Skill playerSkill;
+    [SerializeField] private TextMeshProUGUI skillText;
 
     [Header("Safe Objects")]
     public GameObject safe;
@@ -43,10 +41,8 @@ public class GameManager : MonoBehaviour
     public GameObject[] rings;
 
     [Header("Timer")]
-    [SerializeField]
-    private float timer;
-    [SerializeField]
-    private TextMeshProUGUI timerUI;
+    [SerializeField] private float timer;
+    [SerializeField] private TextMeshProUGUI timerUI;
 
     [Header("UI Objects")]
     public TMP_Dropdown dropDown;
@@ -55,12 +51,9 @@ public class GameManager : MonoBehaviour
     public GameObject gameOverPanel;
 
     [Header("Sounds")]
-    [SerializeField]
-    private AudioSource click;
-    [SerializeField]
-    private AudioSource modClick;
-    [SerializeField]
-    private AudioMixer clickMixer;
+    [SerializeField] private AudioSource click;
+    [SerializeField] private AudioSource modClick;
+    [SerializeField] private AudioMixer clickMixer;
 
     public static GameManager instance;
 
@@ -129,10 +122,10 @@ public class GameManager : MonoBehaviour
         float endRotation = startRotation + 90.0f;
         float t = 0.0f;
 
-        while (t < 5.0f)
+        while (t < 3.0f)
         {
             t += Time.deltaTime;
-            float rotation = Mathf.Lerp(startRotation, endRotation, t / 5.0f);
+            float rotation = Mathf.Lerp(startRotation, endRotation, t / 3.0f);
             safeDoor.transform.eulerAngles = new Vector3(0, rotation, 0);
             yield return null;
         }
@@ -166,7 +159,23 @@ public class GameManager : MonoBehaviour
 
     public void ResetGame()
     {
-        // TODO: 
+        gameOverPanel.SetActive(false);
+
+        safeDoor.transform.eulerAngles = Vector3.zero;
+        for(int i = 0; i < rings.Length; i++)
+        {
+            if (rings[i].activeSelf)
+                rings[i].SetActive(false);
+            else
+                continue;
+        }
+        safe.SetActive(false);
+
+        timerUI.text = "00.00";
+
+        ToggleUI(true);
+
+        gameOver = false;
     }
 
     private void ToggleUI(bool enable)

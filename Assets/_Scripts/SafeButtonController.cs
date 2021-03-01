@@ -9,6 +9,10 @@ public class SafeButtonController : MonoBehaviour
 
     public DialController[] dials;
 
+    [Header("Sounds")]
+    [SerializeField] private AudioSource locked;
+    [SerializeField] private AudioSource opening;
+
     public void OnMousePosition(InputValue value)
     {
         mousePosition = value.Get<Vector2>();
@@ -27,7 +31,10 @@ public class SafeButtonController : MonoBehaviour
             if (!GameManager.instance.gameOver && CheckDials())
             {
                 GameManager.instance.GameOver(true);
+                opening.Play();
             }
+            else if (!GameManager.instance.gameOver)
+                locked.Play();
         }
     }
 
