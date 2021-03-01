@@ -1,0 +1,19 @@
+==========================
+= GAME 3011 Assignment 2 =
+==========================
+
+By: Russell Brabers - 101192571
+
+
+Objective:
+The object of the game is to crack a safe in the allotted time by listening to the click of the dials.
+
+Difficulty:
+There are three levels of difficult: easy, medium, hard, that add more time and dials to the safe.
+
+Player Skill:
+There are four levels of player skill: basic, adept, skilled, master, that distort the click sound when the dial is orientated correctly.
+
+Controls:
+The player can click and drag on each individual dial to rotate them and click on the button in the middle to try to open the safe.
+This project uses the new Unity Input System.
